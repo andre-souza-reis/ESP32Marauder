@@ -1,3 +1,6 @@
+#ifndef EvilPortal_h
+#define EvilPortal_h
+
 struct ssid {
   String essid;
   uint8_t channel;
@@ -14,3 +17,5 @@ struct AccessPoint {
   char rssi;
   LinkedList<uint8_t>* stations;
 };
+
+#endif
