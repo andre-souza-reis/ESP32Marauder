@@ -8,42 +8,16 @@
 #include <ArduinoJson.h>
 #include <algorithm>
 
-#ifdef HAS_BT
-  #include <NimBLEDevice.h>
-#endif
-
 #include <WiFi.h>
 #include "EvilPortal.h"
 #include <math.h>
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
-#ifdef HAS_BT
-  #include "esp_bt.h"
-#endif
-#ifdef HAS_SCREEN
-  #include "Display.h"
-#endif
-#ifdef HAS_SD
-  #include "SDInterface.h"
-#endif
+
 #include "Buffer.h"
-#ifdef HAS_BATTERY
-  #include "BatteryInterface.h"
-#endif
-#ifdef HAS_GPS
-  #include "GpsInterface.h"
-#endif
+
 #include "settings.h"
 #include "Assets.h"
-#ifdef MARAUDER_FLIPPER
-  #include "flipperLED.h"
-#elif defined(XIAO_ESP32_S3)
-  #include "xiaoLED.h"
-#elif defined(MARAUDER_M5STICKC)
-  #include "stickcLED.h"
-#else
-  #include "LedInterface.h"
-#endif
 
 #define bad_list_length 3
 
@@ -97,50 +71,10 @@
 
 #define MAX_CHANNEL 14
 
-extern EvilPortal evil_portal_obj;
-
-#ifdef HAS_SCREEN
-  extern Display display_obj;
-#endif
-#ifdef HAS_SD
-  extern SDInterface sd_obj;
-#endif
-#ifdef HAS_GPS
-  extern GpsInterface gps_obj;
-#endif
 extern Buffer buffer_obj;
-#ifdef HAS_BATTERY
-  extern BatteryInterface battery_obj;
-#endif
-extern Settings settings_obj;
-#ifdef MARAUDER_FLIPPER
-  extern flipperLED flipper_led;
-#elif defined(XIAO_ESP32_S3)
-  extern xiaoLED xiao_led;
-#elif defined(MARAUDER_M5STICKC)
-  extern stickcLED stickc_led;
-#else
-  extern LedInterface led_obj;
-#endif
+
 
 esp_err_t esp_wifi_80211_tx(wifi_interface_t ifx, const void *buffer, int len, bool en_sys_seq);
-
-/*struct ssid {
-  String essid;
-  uint8_t channel;
-  int bssid[6];
-  bool selected;
-};*/
-
-/*struct AccessPoint {
-  String essid;
-  int channel;
-  int bssid[6];
-  bool selected;
-  LinkedList<char>* beacon;
-  int rssi;
-  LinkedList<int>* stations;
-};*/
 
 
 struct mac_addr {
@@ -409,58 +343,5 @@ class WiFiScan
     static void activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type);
     static void eapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type);
     static void wifiSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type);
-
-    /*#ifdef HAS_BT
-      enum EBLEPayloadType
-      {
-        Microsoft,
-        Apple,
-        Samsung,
-        Google
-      };
-
-      struct BLEData
-      {
-        NimBLEAdvertisementData AdvData;
-        NimBLEAdvertisementData ScanData;
-      };
-
-      struct WatchModel
-      {
-          uint8_t value;
-          const char *name;
-      };
-
-      WatchModel* watch_models = nullptr;
-
-      const WatchModel watch_models[] = {
-        {0x1A, "Fallback Watch"},
-        {0x01, "White Watch4 Classic 44m"},
-        {0x02, "Black Watch4 Classic 40m"},
-        {0x03, "White Watch4 Classic 40m"},
-        {0x04, "Black Watch4 44mm"},
-        {0x05, "Silver Watch4 44mm"},
-        {0x06, "Green Watch4 44mm"},
-        {0x07, "Black Watch4 40mm"},
-        {0x08, "White Watch4 40mm"},
-        {0x09, "Gold Watch4 40mm"},
-        {0x0A, "French Watch4"},
-        {0x0B, "French Watch4 Classic"},
-        {0x0C, "Fox Watch5 44mm"},
-        {0x11, "Black Watch5 44mm"},
-        {0x12, "Sapphire Watch5 44mm"},
-        {0x13, "Purpleish Watch5 40mm"},
-        {0x14, "Gold Watch5 40mm"},
-        {0x15, "Black Watch5 Pro 45mm"},
-        {0x16, "Gray Watch5 Pro 45mm"},
-        {0x17, "White Watch5 44mm"},
-        {0x18, "White & Black Watch5"},
-        {0x1B, "Black Watch6 Pink 40mm"},
-        {0x1C, "Gold Watch6 Gold 40mm"},
-        {0x1D, "Silver Watch6 Cyan 44mm"},
-        {0x1E, "Black Watch6 Classic 43m"},
-        {0x20, "Green Watch6 Classic 43m"},
-      };
-    #endif*/
 };
 #endif
