@@ -15,7 +15,7 @@
 #include "Buffer.h"
 
 #include "CommandLine.h"
-#include "lang_var.h"
+//#include "lang_var.h"
 
 WiFiScan wifi_scan_obj;
 Buffer buffer_obj;
