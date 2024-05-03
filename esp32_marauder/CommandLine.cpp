@@ -195,7 +195,8 @@ void CommandLine::filterAccessPoints(String filter) {
 void CommandLine::runCommand(String input) {
   if (input == "") return;
 
-  if(wifi_scan_obj.scanning() && wifi_scan_obj.currentScanMode == WIFI_SCAN_GPS_NMEA){
+  if(wifi_scan_obj.scanning() && wifi_scan_obj.currentScanMode == WIFI_SCAN_GPS_NMEA)
+  {
     if(input != STOPSCAN_CMD) return;    
   }
   else
@@ -231,9 +232,6 @@ void CommandLine::runCommand(String input) {
     Serial.println(HELP_SNIFF_DEAUTH_CMD);
     Serial.println(HELP_SNIFF_PMKID_CMD);
     Serial.println(HELP_STOPSCAN_CMD);
-    #ifdef HAS_GPS
-      Serial.println(HELP_WARDRIVE_CMD);
-    #endif
     
     // WiFi attack
     Serial.println(HELP_ATTACK_CMD);
@@ -246,33 +244,12 @@ void CommandLine::runCommand(String input) {
     Serial.println(HELP_SSID_CMD_A);
     Serial.println(HELP_SSID_CMD_B);
     
-    // Bluetooth sniff/scan
-    #ifdef HAS_BT
-      Serial.println(HELP_BT_SNIFF_CMD);
-      Serial.println(HELP_BT_SPAM_CMD);
-      //Serial.println(HELP_BT_SWIFTPAIR_SPAM_CMD);
-      //Serial.println(HELP_BT_SAMSUNG_SPAM_CMD);
-      //Serial.println(HELP_BT_SPAM_ALL_CMD);
-      #ifdef HAS_GPS
-        Serial.println(HELP_BT_WARDRIVE_CMD);
-      #endif
-      Serial.println(HELP_BT_SKIM_CMD);
-    #endif
     Serial.println(HELP_FOOT);
     return;
   }
 
   // Stop Scan
   if (cmd_args.get(0) == STOPSCAN_CMD) {
-    //if (wifi_scan_obj.currentScanMode == OTA_UPDATE) {
-    //  wifi_scan_obj.currentScanMode = WIFI_SCAN_OFF;
-      //#ifdef HAS_SCREEN
-      //  menu_function_obj.changeMenu(menu_function_obj.updateMenu.parentMenu);
-      //#endif
-    //  WiFi.softAPdisconnect(true);
-    //  web_obj.shutdownServer();
-    //  return;
-    //}
     
     uint8_t old_scan_mode=wifi_scan_obj.currentScanMode;
 
@@ -465,38 +442,38 @@ void CommandLine::runCommand(String input) {
     }
   }
 
-  else if (cmd_args.get(0) == SETTINGS_CMD) {
-    int ss_sw = this->argSearch(&cmd_args, "-s"); // Set setting
-    int re_sw = this->argSearch(&cmd_args, "-r"); // Reset setting
-    int en_sw = this->argSearch(&cmd_args, "enable"); // enable setting
-    int da_sw = this->argSearch(&cmd_args, "disable"); // disable setting
+  // else if (cmd_args.get(0) == SETTINGS_CMD) {
+  //   int ss_sw = this->argSearch(&cmd_args, "-s"); // Set setting
+  //   int re_sw = this->argSearch(&cmd_args, "-r"); // Reset setting
+  //   int en_sw = this->argSearch(&cmd_args, "enable"); // enable setting
+  //   int da_sw = this->argSearch(&cmd_args, "disable"); // disable setting
 
-    if (re_sw != -1) {
-      settings_obj.createDefaultSettings(SPIFFS);
-      return;
-    }
+  //   // if (re_sw != -1) {
+  //   //   settings_obj.createDefaultSettings(SPIFFS);
+  //   //   return;
+  //   // }
 
-    if (ss_sw == -1) {
-      settings_obj.printJsonSettings(settings_obj.getSettingsString());
-    }
-    else {
-      bool result = false;
-      String setting_name = cmd_args.get(ss_sw + 1);
-      if (en_sw != -1)
-        result = settings_obj.saveSetting<bool>(setting_name, true);
-      else if (da_sw != -1)
-        result = settings_obj.saveSetting<bool>(setting_name, false);
-      else {
-        Serial.println("You did not properly enable/disable this setting.");
-        return;
-      }
+  //   // if (ss_sw == -1) {
+  //   //   settings_obj.printJsonSettings(settings_obj.getSettingsString());
+  //   // }
+  //   else {
+  //     bool result = false;
+  //     String setting_name = cmd_args.get(ss_sw + 1);
+  //     if (en_sw != -1)
+  //       result = false; //settings_obj.saveSetting<bool>(setting_name, true);
+  //     else if (da_sw != -1)
+  //       result = false; //settings_obj.saveSetting<bool>(setting_name, false);
+  //     else {
+  //       Serial.println("You did not properly enable/disable this setting.");
+  //       return;
+  //     }
 
-      if (!result) {
-        Serial.println("Could not successfully update setting \"" + setting_name + "\"");
-        return;
-      }
-    }
-  }
+  //     if (!result) {
+  //       Serial.println("Could not successfully update setting \"" + setting_name + "\"");
+  //       return;
+  //     }
+  //   }
+  // }
 
   else if (cmd_args.get(0) == REBOOT_CMD) {
     Serial.println("Rebooting...");
@@ -552,37 +529,35 @@ void CommandLine::runCommand(String input) {
 
       if (cmd_sw != -1) {
         String et_command = cmd_args.get(cmd_sw + 1);
-        if (et_command == "start") {
-          Serial.println("Starting Evil Portal. Stop with " + (String)STOPSCAN_CMD);
-          #ifdef HAS_SCREEN
-            display_obj.clearScreen();
-            menu_function_obj.drawStatusBar();
-          #endif
-          if (html_sw != -1) {
-            String target_html_name = cmd_args.get(html_sw + 1);
-            evil_portal_obj.target_html_name = target_html_name;
-            evil_portal_obj.using_serial_html = false;
-            Serial.println("Set html file as " + evil_portal_obj.target_html_name);
-          }
-          //else {
-          //  evil_portal_obj.target_html_name = "index.html";
-          //}
-          wifi_scan_obj.StartScan(WIFI_SCAN_EVIL_PORTAL, TFT_MAGENTA);
-        }
-        else if (et_command == "reset") {
+        // if (et_command == "start") {
+        //   Serial.println("Starting Evil Portal. Stop with " + (String)STOPSCAN_CMD);
+          
+        //   if (html_sw != -1) {
+        //     String target_html_name = cmd_args.get(html_sw + 1);
+        //     //evil_portal_obj.target_html_name = target_html_name;
+        //     //evil_portal_obj.using_serial_html = false;
+        //     Serial.println("Set html file as " + evil_portal_obj.target_html_name);
+        //   }
+        //   //else {
+        //   //  evil_portal_obj.target_html_name = "index.html";
+        //   //}
+        //   wifi_scan_obj.StartScan(WIFI_SCAN_EVIL_PORTAL, TFT_MAGENTA);
+        // }
+        // else 
+        if (et_command == "reset") {
           
         }
         else if (et_command == "ack") {
           
         }
-        else if (et_command == "sethtml") {
-          String target_html_name = cmd_args.get(cmd_sw + 2);
-          evil_portal_obj.target_html_name = target_html_name;
-          evil_portal_obj.using_serial_html = false;
-          Serial.println("Set html file as " + evil_portal_obj.target_html_name);
-        }
+        // else if (et_command == "sethtml") {
+        //   String target_html_name = cmd_args.get(cmd_sw + 2);
+        //   //evil_portal_obj.target_html_name = target_html_name;
+        //   //evil_portal_obj.using_serial_html = false;
+        //   Serial.println("Set html file as " + evil_portal_obj.target_html_name);
+        // }
         else if (et_command == "sethtmlstr") {
-          evil_portal_obj.setHtmlFromSerial();
+          //evil_portal_obj.setHtmlFromSerial();
         }
         else if (et_command == "setap") {
 
@@ -1035,17 +1010,10 @@ void CommandLine::runCommand(String input) {
       //}
       // Update via SD
       if (sd_sw != -1) {
-        #ifdef HAS_SD
-          if (!sd_obj.supported) {
-            Serial.println("SD card is not connected. Cannot perform SD Update");
-            return;
-          }
-          wifi_scan_obj.currentScanMode = OTA_UPDATE;
-          sd_obj.runUpdate();
-        #else
+
           Serial.println("SD card support disabled. Cannot perform SD Update");
           return;
-        #endif
+
       }
     }
   }

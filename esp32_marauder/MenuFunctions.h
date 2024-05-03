@@ -10,18 +10,7 @@
 #define BATTERY_ANALOG_ON 0
 
 #include "WiFiScan.h"
-#include "BatteryInterface.h"
-#include "SDInterface.h"
 #include "settings.h"
-
-#ifdef HAS_BUTTONS
-  #include "Switches.h"
-  extern Switches u_btn;
-  extern Switches d_btn;
-  extern Switches l_btn;
-  extern Switches r_btn;
-  extern Switches c_btn;
-#endif
 
 extern WiFiScan wifi_scan_obj;
 extern SDInterface sd_obj;
@@ -175,9 +164,6 @@ class MenuFunctions
     void displaySetting(String key, Menu* menu, int index);
     void buttonSelected(uint8_t b, int8_t x = -1);
     void buttonNotSelected(uint8_t b, int8_t x = -1);
-    #if (!defined(HAS_ILI9341) && defined(HAS_BUTTONS))
-      void miniKeyboard(Menu * targetMenu);
-    #endif
 
     uint8_t updateTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 600);
 

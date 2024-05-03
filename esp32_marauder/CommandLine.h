@@ -5,31 +5,15 @@
 
 #include "configs.h"
 
-#ifdef HAS_SCREEN
-  #include "MenuFunctions.h"
-  #include "Display.h"
-#endif 
-
 #include "WiFiScan.h"
-//#include "Web.h"
-#ifdef HAS_SD
-  #include "SDInterface.h"
-#endif
-#include "settings.h"
-#include "LedInterface.h"
 
-#ifdef HAS_SCREEN
-  extern MenuFunctions menu_function_obj;
-  extern Display display_obj;
-#endif
+#include "settings.h"
+
+#include "EvilPortal.h"
 
 extern WiFiScan wifi_scan_obj;
 //extern Web web_obj;
-#ifdef HAS_SD
-  extern SDInterface sd_obj;
-#endif
-extern Settings settings_obj;
-extern LedInterface led_obj;
+
 extern LinkedList<AccessPoint>* access_points;
 extern LinkedList<ssid>* ssids;
 extern LinkedList<Station>* stations;

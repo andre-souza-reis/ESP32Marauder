@@ -1,10 +1,3 @@
-/* FLASH SETTINGS
-Board: LOLIN D32
-Flash Frequency: 80MHz
-Partition Scheme: Minimal SPIFFS
-https://www.online-utility.org/image/convert/to/XBM
-*/
-
 #include "configs.h"
 
 #include <WiFi.h>
@@ -21,13 +14,11 @@ https://www.online-utility.org/image/convert/to/XBM
 #include "WiFiScan.h"
 #include "Buffer.h"
 
-#include "settings.h"
 #include "CommandLine.h"
 #include "lang_var.h"
 
 WiFiScan wifi_scan_obj;
 Buffer buffer_obj;
-Settings settings_obj;
 CommandLine cli_obj;
 
 const String PROGMEM version_number = MARAUDER_VERSION;
@@ -42,16 +33,12 @@ void setup()
 
   Serial.println("ESP-IDF version is: " + String(esp_get_idf_version()));
 
-  settings_obj.begin();
-
   wifi_scan_obj.RunSetup();
 
   buffer_obj = Buffer();
-
-  evil_portal_obj.setup();
   
-  Serial.println(F("CLI Ready"));
   cli_obj.RunSetup();
+  Serial.println(F("CLI Ready"));
 }
 
 
@@ -65,8 +52,6 @@ void loop()
   wifi_scan_obj.main(currentTime);
 
   buffer_obj.save();
-
-  settings_obj.main(currentTime);
 
   delay(50);
 }

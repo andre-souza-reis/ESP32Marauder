@@ -5,7 +5,9 @@
 
 #include "configs.h"
 
-#include <ArduinoJson.h>
+#include "EvilPortal.h"
+
+//#include <ArduinoJson.h>
 #include <algorithm>
 
 #include <WiFi.h>
@@ -123,9 +125,6 @@ class WiFiScan
     uint8_t bluetoothScanTime = 5;
     int packets_sent = 0;
     const wifi_promiscuous_filter_t filt = {.filter_mask=WIFI_PROMIS_FILTER_MASK_MGMT | WIFI_PROMIS_FILTER_MASK_DATA};
-    #ifdef HAS_BT
-      NimBLEScan* pBLEScan;
-    #endif
 
     //String connected_network = "";
     //const String alfa = "1234567890qwertyuiopasdfghjkklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM_";
@@ -197,26 +196,6 @@ class WiFiScan
       Samsung,
       Google
     };
-
-      #ifdef HAS_BT
-
-      struct BLEData
-      {
-        NimBLEAdvertisementData AdvData;
-        NimBLEAdvertisementData ScanData;
-      };
-
-      struct WatchModel
-      {
-          uint8_t value;
-          const char *name;
-      };
-
-      WatchModel* watch_models = nullptr;
-
-      static void scanCompleteCB(BLEScanResults scanResults);
-      NimBLEAdvertisementData GetUniversalAdvertisementData(EBLEPayloadType type);
-    #endif
 
     bool seen_mac(unsigned char* mac);
     bool mac_cmp(struct mac_addr addr1, struct mac_addr addr2);
