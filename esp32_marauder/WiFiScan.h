@@ -9,14 +9,13 @@
 #include <algorithm>
 
 #include <WiFi.h>
-#include "EvilPortal.h"
+
 #include <math.h>
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
 
 #include "Buffer.h"
 
-#include "settings.h"
 #include "Assets.h"
 
 #define bad_list_length 3

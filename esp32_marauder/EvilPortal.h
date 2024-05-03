@@ -1,6 +1,8 @@
 #ifndef EvilPortal_h
 #define EvilPortal_h
 
+#include <LinkedList.h>
+
 struct ssid {
   String essid;
   uint8_t channel;

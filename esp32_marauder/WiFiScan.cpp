@@ -315,45 +315,6 @@ void WiFiScan::RunSetup() {
   access_points = new LinkedList<AccessPoint>();
   stations = new LinkedList<Station>();
 
-  #ifdef HAS_BT
-    watch_models = new WatchModel[26] {
-      {0x1A, "Fallback Watch"},
-      {0x01, "White Watch4 Classic 44m"},
-      {0x02, "Black Watch4 Classic 40m"},
-      {0x03, "White Watch4 Classic 40m"},
-      {0x04, "Black Watch4 44mm"},
-      {0x05, "Silver Watch4 44mm"},
-      {0x06, "Green Watch4 44mm"},
-      {0x07, "Black Watch4 40mm"},
-      {0x08, "White Watch4 40mm"},
-      {0x09, "Gold Watch4 40mm"},
-      {0x0A, "French Watch4"},
-      {0x0B, "French Watch4 Classic"},
-      {0x0C, "Fox Watch5 44mm"},
-      {0x11, "Black Watch5 44mm"},
-      {0x12, "Sapphire Watch5 44mm"},
-      {0x13, "Purpleish Watch5 40mm"},
-      {0x14, "Gold Watch5 40mm"},
-      {0x15, "Black Watch5 Pro 45mm"},
-      {0x16, "Gray Watch5 Pro 45mm"},
-      {0x17, "White Watch5 44mm"},
-      {0x18, "White & Black Watch5"},
-      {0x1B, "Black Watch6 Pink 40mm"},
-      {0x1C, "Gold Watch6 Gold 40mm"},
-      {0x1D, "Silver Watch6 Cyan 44mm"},
-      {0x1E, "Black Watch6 Classic 43m"},
-      {0x20, "Green Watch6 Classic 43m"},
-    };
-    
-    NimBLEDevice::setScanFilterMode(CONFIG_BTDM_SCAN_DUPL_TYPE_DEVICE);
-    NimBLEDevice::setScanDuplicateCacheSize(200);
-    NimBLEDevice::init("");
-    pBLEScan = NimBLEDevice::getScan(); //create new scan
-    this->ble_initialized = true;
-    
-    this->shutdownBLE();
-  #endif
-
   this->initWiFi(1);
 }
 
@@ -415,81 +376,17 @@ int WiFiScan::generateSSIDs(int count) {
   return num_gen;
 }
 
-/*void WiFiScan::joinWiFi(String ssid, String password)
-{
-  static const char * btns[] ={text16, ""};
-  int count = 0;
-  
-  if ((WiFi.status() == WL_CONNECTED) && (ssid == connected_network) && (ssid != "")) {
-    #ifdef HAS_SCREEN
-      lv_obj_t * mbox1 = lv_msgbox_create(lv_scr_act(), NULL);
-      lv_msgbox_set_text(mbox1, text_table4[2]);
-      lv_msgbox_add_btns(mbox1, btns);
-      lv_obj_set_width(mbox1, 200);
-      lv_obj_align(mbox1, NULL, LV_ALIGN_CENTER, 0, 0); //Align to the corner
-    #endif
-    this->wifi_initialized = true;
-    return;
-  }
-  else if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("Already connected. Disconnecting...");
-    WiFi.disconnect();
-  }
-
-  esp_wifi_init(&cfg);
-  esp_wifi_set_storage(WIFI_STORAGE_RAM);
-  esp_wifi_set_mode(WIFI_MODE_NULL);
-  esp_wifi_start();
-    
-  WiFi.begin(ssid.c_str(), password.c_str());
-
-  Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    count++;
-    if (count == 10)
-    {
-      Serial.println("\nCould not connect to WiFi network");
-      #ifdef HAS_SCREEN
-        lv_obj_t * mbox1 = lv_msgbox_create(lv_scr_act(), NULL);
-        lv_msgbox_set_text(mbox1, text_table4[3]);
-        lv_msgbox_add_btns(mbox1, btns);
-        lv_obj_set_width(mbox1, 200);
-        //lv_obj_set_event_cb(mbox1, event_handler);
-        lv_obj_align(mbox1, NULL, LV_ALIGN_CENTER, 0, 0); //Align to the corner
-      #endif
-      WiFi.mode(WIFI_OFF);
-      return;
-    }
-  }
-  
-  #ifdef HAS_SCREEN
-    lv_obj_t * mbox1 = lv_msgbox_create(lv_scr_act(), NULL);
-    lv_msgbox_set_text(mbox1, text_table4[4]);
-    lv_msgbox_add_btns(mbox1, btns);
-    lv_obj_set_width(mbox1, 200);
-    lv_obj_align(mbox1, NULL, LV_ALIGN_CENTER, 0, 0); //Align to the corner
-  #endif
-  connected_network = ssid;
-  
-  Serial.println("\nConnected to the WiFi network");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  this->wifi_initialized = true;
-}*/
-
 // Apply WiFi settings
 void WiFiScan::initWiFi(uint8_t scan_mode) {
   // Set the channel
   if (scan_mode != WIFI_SCAN_OFF) {
-    //Serial.println(F("Initializing WiFi settings..."));
+    Serial.println(F("Initializing WiFi settings..."));
     this->changeChannel();
   
     this->force_pmkid = settings_obj.loadSetting<bool>(text_table4[5]);
     this->force_probe = settings_obj.loadSetting<bool>(text_table4[6]);
     this->save_pcap = settings_obj.loadSetting<bool>(text_table4[7]);
-    //Serial.println(F("Initialization complete"));
+    Serial.println(F("Initialization complete"));
   }
 }
 
