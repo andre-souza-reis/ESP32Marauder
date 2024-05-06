@@ -1,5 +1,5 @@
 #include "Buffer.h"
-#include "lang_var.h"
+//#include "lang_var.h"
 
 Buffer::Buffer(){
   bufA = (uint8_t*)malloc(BUF_SIZE);
@@ -160,7 +160,7 @@ void Buffer::write(const uint8_t* buf, uint32_t len){
 void Buffer::saveFs(){
   file = fs->open(fileName, FILE_APPEND);
   if (!file) {
-    Serial.println(text02+fileName+"'");
+    //Serial.println(text02+fileName+"'");
     return;
   }
 

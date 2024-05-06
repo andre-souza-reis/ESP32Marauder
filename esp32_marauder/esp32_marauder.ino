@@ -18,7 +18,7 @@
 
 #include "settings.h"
 #include "CommandLine.h"
-#include "lang_var.h"
+//#include "lang_var.h"
 
 WiFiScan wifi_scan_obj;
 EvilPortal evil_portal_obj;
