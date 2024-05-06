@@ -1,5 +1,5 @@
 #include "Buffer.h"
-//#include "lang_var.h"
+#include "lang_var.h"
 
 Buffer::Buffer(){
   bufA = (uint8_t*)malloc(BUF_SIZE);

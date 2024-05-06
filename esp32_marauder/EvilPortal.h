@@ -10,12 +10,12 @@
 #include "configs.h"
 #include "settings.h"
 
-#include "SDInterface.h"
+//#include "SDInterface.h"
 #include "Buffer.h"
 #include "lang_var.h"
 
 extern Settings settings_obj;
-extern SDInterface sd_obj;
+//extern SDInterface sd_obj;
 
 extern Buffer buffer_obj; 
 

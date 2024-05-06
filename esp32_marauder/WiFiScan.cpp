@@ -170,7 +170,6 @@ void WiFiScan::StartScan(uint8_t scan_mode, uint16_t color)
     this->startWiFiAttacks(scan_mode, color, text_table4[47]);
   else if (scan_mode == WIFI_ATTACK_AP_SPAM)
     this->startWiFiAttacks(scan_mode, color, " AP Beacon Spam ");
-  }
 
   WiFiScan::currentScanMode = scan_mode;
 }
@@ -434,16 +433,6 @@ void WiFiScan::startLog(String file_name) {
 void WiFiScan::RunEvilPortal(uint8_t scan_mode, uint16_t color)
 {
   startLog("evil_portal");
-
-  #ifdef MARAUDER_FLIPPER
-    flipper_led.sniffLED();
-  #elif defined(XIAO_ESP32_S3)
-    xiao_led.sniffLED();
-  #elif defined(MARAUDER_M5STICKC)
-    stickc_led.sniffLED();
-  #else
-    led_obj.setMode(MODE_SNIFF);
-  #endif
 
   evil_portal_obj.begin(ssids, access_points);
   //if (!evil_portal_obj.begin(ssids, access_points)) {
@@ -2120,7 +2109,12 @@ void WiFiScan::eapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
 
     int temp_len = display_string.length();
 
-    Serial.println(addr);    
+    Serial.println(addr);  
+
+    for(uint8_t i = 0; i < len; i++)
+    {
+      Serial.println(snifferPacket->payload[i]);
+    }  
 
   }
 

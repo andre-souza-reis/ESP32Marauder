@@ -243,6 +243,10 @@ void CommandLine::runCommand(String input) {
     Serial.println(HELP_SSID_CMD_A);
     Serial.println(HELP_SSID_CMD_B);
 
+    return;
+
+  }
+
   // Stop Scan
   if (cmd_args.get(0) == STOPSCAN_CMD) {
     //if (wifi_scan_obj.currentScanMode == OTA_UPDATE) {
