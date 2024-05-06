@@ -5,20 +5,17 @@
 
 #include "configs.h"
 
-#include "EvilPortal.h"
-
-//#include <ArduinoJson.h>
+#include <ArduinoJson.h>
 #include <algorithm>
-
 #include <WiFi.h>
-
+#include "EvilPortal.h"
 #include <math.h>
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
-
 #include "Buffer.h"
-
+#include "settings.h"
 #include "Assets.h"
+
 
 #define bad_list_length 3
 
@@ -72,11 +69,14 @@
 
 #define MAX_CHANNEL 14
 
+extern EvilPortal evil_portal_obj;
+
 extern Buffer buffer_obj;
+
+extern Settings settings_obj;
 
 
 esp_err_t esp_wifi_80211_tx(wifi_interface_t ifx, const void *buffer, int len, bool en_sys_seq);
-
 
 struct mac_addr {
    unsigned char bytes[6];
