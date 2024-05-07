@@ -816,56 +816,6 @@
   #endif
   //// END MENU DEFINITIONS
 
-  //// SD DEFINITIONS
-  #if defined(USE_SD)
-
-    #ifdef MARAUDER_V4
-      #define SD_CS 12
-    #endif
-
-    #ifdef MARAUDER_V6
-      #define SD_CS 12
-    #endif
-
-    #ifdef MARAUDER_V6_1
-      #define SD_CS 14
-    #endif
-
-    #ifdef MARAUDER_KIT
-      #define SD_CS 12
-    #endif
-
-    #ifdef MARAUDER_MINI
-      #define SD_CS 4
-    #endif
-
-    #ifdef MARAUDER_REV_FEATHER
-      #define SD_CS 5
-    #endif
-
-    #ifdef MARAUDER_M5STICKC
-      #define SD_CS -1
-    #endif
-
-    #ifdef MARAUDER_FLIPPER
-      #define SD_CS 10
-    #endif
-
-    #ifdef ESP32_LDDB
-      #define SD_CS 4
-    #endif
-
-    #ifdef MARAUDER_DEV_BOARD_PRO
-      #define SD_CS 4
-    #endif
-
-    #ifdef XIAO_ESP32_S3
-      #define SD_CS 3
-    #endif
-
-  #endif
-  //// END SD DEFINITIONS
-
   //// SCREEN STUFF
   #ifndef HAS_SCREEN
 
@@ -939,70 +889,9 @@
   #else
     #define MAX_HTML_SIZE 20000
   #endif
-  //// END EVIL PORTAL STUFF
 
-  //// GPS STUFF
-  #ifdef HAS_GPS
-    #if defined(MARAUDER_V6) || defined(MARAUDER_V6_1)
-      #define GPS_SERIAL_INDEX 2
-      #define GPS_TX 4
-      #define GPS_RX 13
-      #define mac_history_len 512
-    #elif defined(MARAUDER_V4)
-      #define GPS_SERIAL_INDEX 2
-      #define GPS_TX 4
-      #define GPS_RX 13
-      #define mac_history_len 512
-    #elif defined(MARAUDER_KIT)
-      #define GPS_SERIAL_INDEX 2
-      #define GPS_TX 4
-      #define GPS_RX 13
-      #define mac_history_len 512
-    #elif defined(MARAUDER_DEV_BOARD_PRO)
-      #define GPS_SERIAL_INDEX 2
-      #define GPS_TX 21
-      #define GPS_RX 17
-      #define mac_history_len 512
-    #elif defined(MARAUDER_MINI)
-      #define GPS_SERIAL_INDEX 2
-      #define GPS_TX 21
-      #define GPS_RX 22
-      #define mac_history_len 512
-    #elif defined(MARAUDER_FLIPPER)
-      #define GPS_SERIAL_INDEX 1
-      #define GPS_TX 9
-      #define GPS_RX 21
-      #define mac_history_len 512
-    #elif defined(MARAUDER_M5STICKC)
-      #define GPS_SERIAL_INDEX 1
-      #define GPS_TX 33
-      #define GPS_RX 32
-      #define mac_history_len 512
-    #elif defined(MARAUDER_REV_FEATHER)
-      #define GPS_SERIAL_INDEX 1
-      #define GPS_TX 6
-      #define GPS_RX 9
-      #define mac_history_len 512
-    #endif
-  #else
-    #define mac_history_len 512
-  #endif
-  //// END GPS STUFF
+  #define mac_history_len 512
 
-  //// MARAUDER TITLE STUFF
-  #ifdef MARAUDER_V4
-    #define MARAUDER_TITLE_BYTES 13578
-  #elif defined(MARAUDER_V6) || defined(MARAUDER_V6_1)
-    #define MARAUDER_TITLE_BYTES 13578
-  #elif defined(MARAUDER_KIT)
-    #define MARAUDER_TITLE_BYTES 13578
-  #elif defined(MARAUDER_MINI)
-    #define MARAUDER_TITLE_BYTES 13578
-  #elif defined(MARAUDER_REV_FEATHER)
-    #define MARAUDER_TITLE_BYTES 13578
-  #else
-    #define MARAUDER_TITLE_BYTES 13578
-  #endif
-  //// END MARAUDER TITLE STUFF
+  #define MARAUDER_TITLE_BYTES 13578
 
 #endif

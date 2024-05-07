@@ -211,15 +211,9 @@ void CommandLine::runCommand(String input) {
     Serial.println(HELP_SETTINGS_CMD);
     Serial.println(HELP_CLEARAP_CMD_A);
     Serial.println(HELP_REBOOT_CMD);
-    Serial.println(HELP_UPDATE_CMD_A);
-    Serial.println(HELP_LS_CMD);
-    Serial.println(HELP_LED_CMD);
-    Serial.println(HELP_GPS_DATA_CMD);
-    Serial.println(HELP_GPS_CMD);
     Serial.println(HELP_NMEA_CMD);
     
     // WiFi sniff/scan
-    Serial.println(HELP_EVIL_PORTAL_CMD);
     Serial.println(HELP_SIGSTREN_CMD);
     Serial.println(HELP_SCANAP_CMD);
     Serial.println(HELP_SCANSTA_CMD);
@@ -249,15 +243,6 @@ void CommandLine::runCommand(String input) {
 
   // Stop Scan
   if (cmd_args.get(0) == STOPSCAN_CMD) {
-    //if (wifi_scan_obj.currentScanMode == OTA_UPDATE) {
-    //  wifi_scan_obj.currentScanMode = WIFI_SCAN_OFF;
-      //#ifdef HAS_SCREEN
-      //  menu_function_obj.changeMenu(menu_function_obj.updateMenu.parentMenu);
-      //#endif
-    //  WiFi.softAPdisconnect(true);
-    //  web_obj.shutdownServer();
-    //  return;
-    //}
     
     uint8_t old_scan_mode=wifi_scan_obj.currentScanMode;
 
@@ -278,39 +263,6 @@ void CommandLine::runCommand(String input) {
   }
   else if (cmd_args.get(0) == NMEA_CMD) {
 
-  }
-  // LED command
-  else if (cmd_args.get(0) == LED_CMD) {
-    int hex_arg = this->argSearch(&cmd_args, "-s");
-    int pat_arg = this->argSearch(&cmd_args, "-p");
-    #ifdef PIN
-      if (hex_arg != -1) {
-        String hexstring = cmd_args.get(hex_arg + 1);
-        int number = (int)strtol(&hexstring[1], NULL, 16);
-        int r = number >> 16;
-        int g = number >> 8 & 0xFF;
-        int b = number & 0xFF;
-        //Serial.println(r);
-        //Serial.println(g);
-        //Serial.println(b);
-        led_obj.setColor(r, g, b);
-        led_obj.setMode(MODE_CUSTOM);
-      }
-      else if (pat_arg != -1) {
-        String pat_name = cmd_args.get(pat_arg + 1);
-        pat_name.toLowerCase();
-        if (pat_name == "rainbow") {
-          led_obj.setMode(MODE_RAINBOW);
-        }
-      }
-    #else
-      Serial.println("This hardware does not support neopixel");
-    #endif
-  }
-  // ls command
-  else if (cmd_args.get(0) == LS_CMD) {
-      Serial.println("SD support disabled, cannot use command");
-      return;
   }
 
   // Channel command
@@ -402,47 +354,7 @@ void CommandLine::runCommand(String input) {
     else if (cmd_args.get(0) == WARDRIVE_CMD) {
       Serial.println("GPS not supported");
     }
-    // AP Scan
-    else if (cmd_args.get(0) == EVIL_PORTAL_CMD) {
-      int cmd_sw = this->argSearch(&cmd_args, "-c");
-      int html_sw = this->argSearch(&cmd_args, "-w");
-
-      if (cmd_sw != -1) {
-        String et_command = cmd_args.get(cmd_sw + 1);
-        if (et_command == "start") {
-          Serial.println("Starting Evil Portal. Stop with " + (String)STOPSCAN_CMD);
-
-          if (html_sw != -1) {
-            String target_html_name = cmd_args.get(html_sw + 1);
-            evil_portal_obj.target_html_name = target_html_name;
-            evil_portal_obj.using_serial_html = false;
-            Serial.println("Set html file as " + evil_portal_obj.target_html_name);
-          }
-          //else {
-          //  evil_portal_obj.target_html_name = "index.html";
-          //}
-          wifi_scan_obj.StartScan(WIFI_SCAN_EVIL_PORTAL, TFT_MAGENTA);
-        }
-        else if (et_command == "reset") {
-          
-        }
-        else if (et_command == "ack") {
-          
-        }
-        else if (et_command == "sethtml") {
-          String target_html_name = cmd_args.get(cmd_sw + 2);
-          evil_portal_obj.target_html_name = target_html_name;
-          evil_portal_obj.using_serial_html = false;
-          Serial.println("Set html file as " + evil_portal_obj.target_html_name);
-        }
-        else if (et_command == "sethtmlstr") {
-          evil_portal_obj.setHtmlFromSerial();
-        }
-        else if (et_command == "setap") {
-
-        }
-      }
-    }
+    // AP Scan 
     else if (cmd_args.get(0) == SCANAP_CMD) {
       int full_sw = -1;
 
@@ -644,129 +556,6 @@ void CommandLine::runCommand(String input) {
           Serial.println("Attack type not properly defined");
           return;
         }
-      }
-    }
-
-    //// Bluetooth scan/attack commands
-    // Bluetooth scan
-    if (cmd_args.get(0) == BT_SNIFF_CMD) {
-      Serial.println("Bluetooth not supported");
-    }
-    else if (cmd_args.get(0) == BT_SPAM_CMD) {
-      int bt_type_sw = this->argSearch(&cmd_args, "-t");
-      if (bt_type_sw != -1) {
-        String bt_type = cmd_args.get(bt_type_sw + 1);
-
-        if (bt_type == "apple") {
-
-          Serial.println("Bluetooth not supported");
-
-        }
-        else if (bt_type == "windows") {
-
-            Serial.println("Bluetooth not supported");
-        }
-        else if (bt_type == "samsung") {
-
-            Serial.println("Bluetooth not supported");
-        }
-        else if (bt_type == "google") {
-
-            Serial.println("Bluetooth not supported");
-
-        }
-        else if (bt_type == "all") {
-
-            Serial.println("Bluetooth not supported");
-
-        }
-        else {
-          Serial.println("You did not specify a correct spam type");
-        }
-      }
-    }
-    /*else if (cmd_args.get(0) == BT_SOUR_APPLE_CMD) {
-      #ifdef HAS_BT
-        Serial.println("Starting Sour Apple attack. Stop with " + (String)STOPSCAN_CMD);
-        #ifdef HAS_SCREEN
-          display_obj.clearScreen();
-          menu_function_obj.drawStatusBar();
-        #endif
-        wifi_scan_obj.StartScan(BT_ATTACK_SOUR_APPLE, TFT_GREEN);
-      #else
-        Serial.println("Bluetooth not supported");
-      #endif
-    }
-    else if (cmd_args.get(0) == BT_SWIFTPAIR_SPAM_CMD) {
-      #ifdef HAS_BT
-        Serial.println("Starting Swiftpair Spam attack. Stop with " + (String)STOPSCAN_CMD);
-        #ifdef HAS_SCREEN
-          display_obj.clearScreen();
-          menu_function_obj.drawStatusBar();
-        #endif
-        wifi_scan_obj.StartScan(BT_ATTACK_SWIFTPAIR_SPAM, TFT_CYAN);
-      #else
-        Serial.println("Bluetooth not supported");
-      #endif
-    }
-    else if (cmd_args.get(0) == BT_SAMSUNG_SPAM_CMD) {
-      #ifdef HAS_BT
-        Serial.println("Starting Samsung Spam attack. Stop with " + (String)STOPSCAN_CMD);
-        #ifdef HAS_SCREEN
-          display_obj.clearScreen();
-          menu_function_obj.drawStatusBar();
-        #endif
-        wifi_scan_obj.StartScan(BT_ATTACK_SAMSUNG_SPAM, TFT_CYAN);
-      #else
-        Serial.println("Bluetooth not supported");
-      #endif
-    }
-    else if (cmd_args.get(0) == BT_SPAM_ALL_CMD) {
-      #ifdef HAS_BT
-        Serial.println("Starting BT Spam All attack. Stop with " + (String)STOPSCAN_CMD);
-        #ifdef HAS_SCREEN
-          display_obj.clearScreen();
-          menu_function_obj.drawStatusBar();
-        #endif
-        wifi_scan_obj.StartScan(BT_ATTACK_SPAM_ALL, TFT_MAGENTA);
-      #else
-        Serial.println("Bluetooth not supported");
-      #endif
-    }*/
-    // Wardrive
-    else if (cmd_args.get(0) == BT_WARDRIVE_CMD) {
-
-        Serial.println("Bluetooth not supported");
-
-      
-    }
-    // Bluetooth CC Skimmer scan
-    else if (cmd_args.get(0) == BT_SKIM_CMD) {
-
-        Serial.println("Bluetooth not supported");
-
-    }
-
-    // Update command
-    if (cmd_args.get(0) == UPDATE_CMD) {
-      //int w_sw = this->argSearch(&cmd_args, "-w"); // Web update
-      int sd_sw = this->argSearch(&cmd_args, "-s"); // SD Update
-
-      // Update via OTA
-      //if (w_sw != -1) {
-      //  Serial.println("Starting Marauder OTA Update. Stop with " + (String)STOPSCAN_CMD);
-      //  wifi_scan_obj.currentScanMode = OTA_UPDATE;
-        //#ifdef HAS_SCREEN
-        //  menu_function_obj.changeMenu(menu_function_obj.updateMenu);
-        //#endif
-      //  web_obj.setupOTAupdate();
-      //}
-      // Update via SD
-      if (sd_sw != -1) {
-
-          Serial.println("SD card support disabled. Cannot perform SD Update");
-          return;
-
       }
     }
   }

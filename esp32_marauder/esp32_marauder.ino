@@ -21,7 +21,6 @@
 //#include "lang_var.h"
 
 WiFiScan wifi_scan_obj;
-EvilPortal evil_portal_obj;
 Buffer buffer_obj;
 Settings settings_obj;
 CommandLine cli_obj;
@@ -43,8 +42,6 @@ void setup()
   wifi_scan_obj.RunSetup();
 
   buffer_obj = Buffer();
-
-  evil_portal_obj.setup();
   
   Serial.println(F("CLI Ready"));
   cli_obj.RunSetup();

@@ -5,8 +5,6 @@
 
 #include "configs.h"
 
-#include "EvilPortal.h"
-
 #include <ArduinoJson.h>
 #include <algorithm>
 #include <WiFi.h>
@@ -54,7 +52,6 @@
 #define WIFI_ATTACK_DEAUTH_TARGETED 27
 #define WIFI_SCAN_ACTIVE_LIST_EAPOL 28
 #define WIFI_SCAN_SIG_STREN 29
-#define WIFI_SCAN_EVIL_PORTAL 30
 #define WIFI_SCAN_GPS_DATA 31
 #define WIFI_SCAN_WAR_DRIVE 32
 #define WIFI_SCAN_STATION_WAR_DRIVE 33
@@ -70,8 +67,6 @@
 #define GRAPH_REFRESH 100
 
 #define MAX_CHANNEL 14
-
-extern EvilPortal evil_portal_obj;
 
 extern Buffer buffer_obj;
 
@@ -243,7 +238,6 @@ class WiFiScan
     void RunSourApple(uint8_t scan_mode, uint16_t color);
     void RunSwiftpairSpam(uint8_t scan_mode, uint16_t color);
     void RunLvJoinWiFi(uint8_t scan_mode, uint16_t color);
-    void RunEvilPortal(uint8_t scan_mode, uint16_t color);
     bool checkMem();
 
 

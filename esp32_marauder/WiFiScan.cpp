@@ -128,8 +128,6 @@ void WiFiScan::StartScan(uint8_t scan_mode, uint16_t color)
     RunProbeScan(scan_mode, color);
   else if (scan_mode == WIFI_SCAN_STATION_WAR_DRIVE)
     RunProbeScan(scan_mode, color);
-  //else if (scan_mode == WIFI_SCAN_EVIL_PORTAL)
-    //RunEvilPortal(scan_mode, color);
   else if (scan_mode == WIFI_SCAN_EAPOL)
     RunEapolScan(scan_mode, color);
   else if (scan_mode == WIFI_SCAN_ACTIVE_EAPOL)
@@ -238,7 +236,6 @@ void WiFiScan::StopScan(uint8_t scan_mode)
   (currentScanMode == WIFI_SCAN_AP) ||
   (currentScanMode == WIFI_SCAN_WAR_DRIVE) ||
   (currentScanMode == WIFI_SCAN_STATION_WAR_DRIVE) ||
-  (currentScanMode == WIFI_SCAN_EVIL_PORTAL) ||
   (currentScanMode == WIFI_SCAN_RAW_CAPTURE) ||
   (currentScanMode == WIFI_SCAN_STATION) ||
   (currentScanMode == WIFI_SCAN_SIG_STREN) ||
@@ -428,22 +425,6 @@ void WiFiScan::startLog(String file_name) {
     NULL,
     save_serial // Set with commandline options
   );
-}
-
-void WiFiScan::RunEvilPortal(uint8_t scan_mode, uint16_t color)
-{
-  startLog("evil_portal");
-
-  evil_portal_obj.begin(ssids, access_points);
-  //if (!evil_portal_obj.begin(ssids, access_points)) {
-  //  Serial.println("Could not successfully start EvilPortal. Setting WIFI_SCAN_OFF...");
-  //  this->StartScan(WIFI_SCAN_OFF, TFT_MAGENTA);
-  //  return;
-  //}
-  //else
-  //  Serial.println("Setup EvilPortal. Current mode: " + this->currentScanMode);
-  this->wifi_initialized = true;
-  initTime = millis();
 }
 
 // Function to start running a beacon scan
@@ -2282,9 +2263,6 @@ void WiFiScan::main(uint32_t currentTime)
       this->initTime = millis();
       this->RunGPSNmea();
     }
-  }
-  else if (currentScanMode == WIFI_SCAN_EVIL_PORTAL) {
-    evil_portal_obj.main(currentScanMode);
   }
   else if (currentScanMode == WIFI_SCAN_ACTIVE_LIST_EAPOL) {
     if (currentTime - initTime >= this->channel_hop_delay * 1000)
