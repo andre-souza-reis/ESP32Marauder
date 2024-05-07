@@ -3,16 +3,33 @@
 #ifndef WiFiScan_h
 #define WiFiScan_h
 
-#include "configs.h"
-
 #include <ArduinoJson.h>
 #include <algorithm>
 #include <WiFi.h>
-#include "EvilPortal.h"
 #include <math.h>
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
-#include "settings.h"
+#include "LinkedList.h"
+
+#define mac_history_len 512
+#define MEM_LOWER_LIM 20000
+
+struct ssid {
+  String essid;
+  uint8_t channel;
+  uint8_t bssid[6];
+  bool selected;
+};
+
+struct AccessPoint {
+  String essid;
+  uint8_t channel;
+  uint8_t bssid[6];
+  bool selected;
+  LinkedList<char>* beacon;
+  char rssi;
+  LinkedList<uint8_t>* stations;
+};
 
 
 #define bad_list_length 3

@@ -3,11 +3,7 @@
 #ifndef CommandLine_h
 #define CommandLine_h
 
-#include "configs.h"
-
 #include "WiFiScan.h"
-
-#include "settings.h"
 
 extern WiFiScan wifi_scan_obj;
 //extern Web web_obj;

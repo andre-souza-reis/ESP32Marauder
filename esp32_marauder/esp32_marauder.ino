@@ -4,6 +4,8 @@
 #include "WiFiScan.h"
 #include "CommandLine.h"
 
+#define MARAUDER_VERSION "v0.13.9"
+
 WiFiScan wifi_scan_obj;
 CommandLine cli_obj;
 

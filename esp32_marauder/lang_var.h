@@ -3,9 +3,6 @@
 #ifndef lang_var_h
   #define lang_var_h
 
-
-  //#include "configs.h"
-
   //Starting window texts
   PROGMEM const char text0_0[] = "Giving room for HardwareSerial...";
   PROGMEM const char text0_1[] = "Started Serial";
