@@ -3,15 +3,11 @@
 #ifndef EvilPortal_h
 #define EvilPortal_h
 
-#include "configs.h"
+#include "LinkedList.h"
+
 #include "settings.h"
 
-#include "Buffer.h"
 #include "lang_var.h"
-
-extern Settings settings_obj;
-
-extern Buffer buffer_obj; 
 
 struct ssid {
   String essid;

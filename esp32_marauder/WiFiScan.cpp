@@ -104,9 +104,9 @@ void WiFiScan::initWiFi(uint8_t scan_mode) {
     //Serial.println(F("Initializing WiFi settings..."));
     this->changeChannel();
   
-    this->force_pmkid = settings_obj.loadSetting<bool>(text_table4[5]);
-    this->force_probe = settings_obj.loadSetting<bool>(text_table4[6]);
-    this->save_pcap = settings_obj.loadSetting<bool>(text_table4[7]);
+    this->force_pmkid = false; //settings_obj.loadSetting<bool>(text_table4[5]);
+    this->force_probe = false; //settings_obj.loadSetting<bool>(text_table4[6]);
+    this->save_pcap = false ;// settings_obj.loadSetting<bool>(text_table4[7]);
     //Serial.println(F("Initialization complete"));
   }
 }
@@ -411,26 +411,9 @@ String WiFiScan::freeRAM()
   return String(s);
 }
 
-void WiFiScan::startPcap(String file_name) {
-  buffer_obj.pcapOpen(
-    file_name,
-    NULL,
-    save_serial // Set with commandline options
-  );
-}
-
-void WiFiScan::startLog(String file_name) {
-  buffer_obj.logOpen(
-    file_name,
-    NULL,
-    save_serial // Set with commandline options
-  );
-}
-
 // Function to start running a beacon scan
 void WiFiScan::RunAPScan(uint8_t scan_mode, uint16_t color)
 {
-  startPcap("ap");
 
   Serial.println(text_table4[9] + (String)access_points->size());
 
@@ -490,7 +473,6 @@ void WiFiScan::RunInfo()
 
 void WiFiScan::RunPacketMonitor(uint8_t scan_mode, uint16_t color)
 {
-  startPcap("packet_monitor");
 
   Serial.println("Running packet scan...");
   esp_wifi_init(&cfg);
@@ -509,7 +491,6 @@ void WiFiScan::RunEapolScan(uint8_t scan_mode, uint16_t color)
 {
   
   num_eapol = 0;
-  startPcap("eapol");
 
   esp_wifi_init(&cfg);
   esp_wifi_set_storage(WIFI_STORAGE_RAM);
@@ -571,7 +552,6 @@ void WiFiScan::RunMimicFlood(uint8_t scan_mode, uint16_t color) {
 
 void WiFiScan::RunPwnScan(uint8_t scan_mode, uint16_t color)
 {
-  startPcap("pwnagotchi");
   
   esp_wifi_init(&cfg);
   esp_wifi_set_storage(WIFI_STORAGE_RAM);
@@ -621,12 +601,8 @@ void WiFiScan::executeWarDrive() {
 // Function to start running a beacon scan
 void WiFiScan::RunBeaconScan(uint8_t scan_mode, uint16_t color)
 {
-  if (scan_mode == WIFI_SCAN_AP)
-    startPcap("beacon");
-  else if (scan_mode == WIFI_SCAN_WAR_DRIVE) {
-
+  if (scan_mode == WIFI_SCAN_WAR_DRIVE) {
     return;
-
   }
 
   if (scan_mode != WIFI_SCAN_WAR_DRIVE) {
@@ -654,7 +630,6 @@ void WiFiScan::startWardriverWiFi() {
 
 void WiFiScan::RunStationScan(uint8_t scan_mode, uint16_t color)
 {
-  startPcap("station");
   
   esp_wifi_init(&cfg);
   esp_wifi_set_storage(WIFI_STORAGE_RAM);
@@ -670,9 +645,6 @@ void WiFiScan::RunStationScan(uint8_t scan_mode, uint16_t color)
 
 void WiFiScan::RunRawScan(uint8_t scan_mode, uint16_t color)
 {
-  if (scan_mode != WIFI_SCAN_SIG_STREN)
-    startPcap("raw");
-  
   esp_wifi_init(&cfg);
   esp_wifi_set_storage(WIFI_STORAGE_RAM);
   esp_wifi_set_mode(WIFI_MODE_NULL);
@@ -687,8 +659,6 @@ void WiFiScan::RunRawScan(uint8_t scan_mode, uint16_t color)
 
 void WiFiScan::RunDeauthScan(uint8_t scan_mode, uint16_t color)
 {
-  startPcap("deauth");
-  
   esp_wifi_init(&cfg);
   esp_wifi_set_storage(WIFI_STORAGE_RAM);
   esp_wifi_set_mode(WIFI_MODE_NULL);
@@ -705,9 +675,7 @@ void WiFiScan::RunDeauthScan(uint8_t scan_mode, uint16_t color)
 // Function for running probe request scan
 void WiFiScan::RunProbeScan(uint8_t scan_mode, uint16_t color)
 {
-  if (scan_mode == WIFI_SCAN_PROBE)
-    startPcap("probe");
-  else if (scan_mode == WIFI_SCAN_STATION_WAR_DRIVE) {
+  if (scan_mode == WIFI_SCAN_STATION_WAR_DRIVE) {
     return;
   }
   
@@ -827,8 +795,6 @@ void WiFiScan::pwnSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
         Serial.print(" ");
 
         Serial.println();
-
-        buffer_obj.append(snifferPacket, len);
       }
     }
   }
@@ -974,8 +940,6 @@ void WiFiScan::apSnifferCallbackFull(void* buf, wifi_promiscuous_pkt_type_t type
         Serial.print(esp_get_free_heap_size());
 
         Serial.println();
-
-        buffer_obj.append(snifferPacket, len);
       }
     }
   }
@@ -1088,8 +1052,6 @@ void WiFiScan::apSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
         Serial.print(esp_get_free_heap_size());
 
         Serial.println();
-
-        buffer_obj.append(snifferPacket, len);
       }
     }
   }
@@ -1186,8 +1148,6 @@ void WiFiScan::beaconSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type
         int temp_len = display_string.length();
 
         Serial.println();
-
-        buffer_obj.append(snifferPacket, len);
       }     
     }
   }
@@ -1331,8 +1291,6 @@ void WiFiScan::stationSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t typ
   ap.stations->add(stations->size() - 1);
 
   access_points->set(ap_index, ap);
-
-  buffer_obj.append(snifferPacket, len);
 }
 
 void WiFiScan::rawSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
@@ -1416,8 +1374,6 @@ void WiFiScan::rawSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
   int temp_len = display_string.length();
 
   Serial.println();
-
-  buffer_obj.append(snifferPacket, len);
 }
 
 void WiFiScan::deauthSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
@@ -1462,8 +1418,6 @@ void WiFiScan::deauthSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type
       display_string.concat(addr);
       
       Serial.println();
-
-      buffer_obj.append(snifferPacket, len);
     }
   }
 }
@@ -1520,11 +1474,6 @@ void WiFiScan::probeSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
 
         
         Serial.println();    
-
-        buffer_obj.append(snifferPacket, len);
-      }
-      else if (wifi_scan_obj.currentScanMode == WIFI_SCAN_STATION_WAR_DRIVE) {
-
       }
     }
   }
@@ -1597,8 +1546,6 @@ void WiFiScan::beaconListSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t 
 
       
       Serial.println();    
-
-      buffer_obj.append(snifferPacket, len);
     }
   }
 }
@@ -2024,8 +1971,6 @@ void WiFiScan::wifiSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
     display_string.concat(addr);
 
     int temp_len = display_string.length();
-
-    buffer_obj.append(snifferPacket, len);
   }
 }
 
@@ -2098,8 +2043,6 @@ void WiFiScan::eapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
     }  
 
   }
-
-  buffer_obj.append(snifferPacket, len);
 }
 
 void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
@@ -2184,8 +2127,6 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
     Serial.println("Received EAPOL:");
 
   }
-
-  buffer_obj.append(snifferPacket, len);
 }
 
 //void WiFiScan::sniffer_callback(void* buf, wifi_promiscuous_pkt_type_t type) {
@@ -2281,7 +2222,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }
@@ -2296,7 +2237,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }
@@ -2311,7 +2252,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }
@@ -2339,7 +2280,7 @@ void WiFiScan::main(uint32_t currentTime)
               String displayString2 = "";
               displayString.concat(text18);
               displayString.concat(packets_sent);
-              for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+              for (int x = 0; x < 22; x++)
                 displayString2.concat(" ");
               packets_sent = 0;
             }
@@ -2371,7 +2312,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }
@@ -2392,7 +2333,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }
@@ -2408,7 +2349,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }
@@ -2445,7 +2386,7 @@ void WiFiScan::main(uint32_t currentTime)
       String displayString2 = "";
       displayString.concat(text18);
       displayString.concat(packets_sent);
-      for (int x = 0; x < STANDARD_FONT_CHAR_LIMIT; x++)
+      for (int x = 0; x < 22; x++)
         displayString2.concat(" ");
       packets_sent = 0;
     }

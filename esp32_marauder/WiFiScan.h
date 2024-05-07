@@ -12,9 +12,7 @@
 #include <math.h>
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
-#include "Buffer.h"
 #include "settings.h"
-#include "Assets.h"
 
 
 #define bad_list_length 3
@@ -67,10 +65,6 @@
 #define GRAPH_REFRESH 100
 
 #define MAX_CHANNEL 14
-
-extern Buffer buffer_obj;
-
-extern Settings settings_obj;
 
 
 esp_err_t esp_wifi_80211_tx(wifi_interface_t ifx, const void *buffer, int len, bool en_sys_seq);
@@ -301,8 +295,6 @@ class WiFiScan
     const char* generateRandomName();
 
     bool save_serial = false;
-    void startPcap(String file_name);
-    void startLog(String file_name);
 
     static void getMAC(char *addr, uint8_t* data, uint16_t offset);
     static void pwnSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type);

@@ -26,9 +26,6 @@ const char PROGMEM CLEARAP_CMD[] = "clearlist";
 const char PROGMEM REBOOT_CMD[] = "reboot";
 const char PROGMEM UPDATE_CMD[] = "update";
 const char PROGMEM HELP_CMD[] = "help";
-const char PROGMEM SETTINGS_CMD[] = "settings";
-const char PROGMEM LS_CMD[] = "ls";
-const char PROGMEM LED_CMD[] = "led";
 const char PROGMEM GPS_DATA_CMD[] = "gpsdata";
 const char PROGMEM GPS_CMD[] = "gps";
 const char PROGMEM NMEA_CMD[] = "nmea";
@@ -66,7 +63,6 @@ const char PROGMEM HELP_HEAD[] = "============ Commands ============";
 const char PROGMEM HELP_CH_CMD[] = "channel [-s <channel>]";
 const char PROGMEM HELP_CLEARAP_CMD_A[] = "clearlist -a/-c/-s";
 const char PROGMEM HELP_REBOOT_CMD[] = "reboot";
-const char PROGMEM HELP_SETTINGS_CMD[] = "settings [-s <setting> enable/disable>]/[-r]";
 const char PROGMEM HELP_NMEA_CMD[] = "nmea";
 
 // WiFi sniff/scan

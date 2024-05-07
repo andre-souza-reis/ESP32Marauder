@@ -208,7 +208,6 @@ void CommandLine::runCommand(String input) {
   if (cmd_args.get(0) == HELP_CMD) {
     Serial.println(HELP_HEAD);
     Serial.println(HELP_CH_CMD);
-    Serial.println(HELP_SETTINGS_CMD);
     Serial.println(HELP_CLEARAP_CMD_A);
     Serial.println(HELP_REBOOT_CMD);
     Serial.println(HELP_NMEA_CMD);
@@ -301,39 +300,6 @@ void CommandLine::runCommand(String input) {
     }
   }
 
-  else if (cmd_args.get(0) == SETTINGS_CMD) {
-    int ss_sw = this->argSearch(&cmd_args, "-s"); // Set setting
-    int re_sw = this->argSearch(&cmd_args, "-r"); // Reset setting
-    int en_sw = this->argSearch(&cmd_args, "enable"); // enable setting
-    int da_sw = this->argSearch(&cmd_args, "disable"); // disable setting
-
-    if (re_sw != -1) {
-      settings_obj.createDefaultSettings(SPIFFS);
-      return;
-    }
-
-    if (ss_sw == -1) {
-      settings_obj.printJsonSettings(settings_obj.getSettingsString());
-    }
-    else {
-      bool result = false;
-      String setting_name = cmd_args.get(ss_sw + 1);
-      if (en_sw != -1)
-        result = settings_obj.saveSetting<bool>(setting_name, true);
-      else if (da_sw != -1)
-        result = settings_obj.saveSetting<bool>(setting_name, false);
-      else {
-        Serial.println("You did not properly enable/disable this setting.");
-        return;
-      }
-
-      if (!result) {
-        Serial.println("Could not successfully update setting \"" + setting_name + "\"");
-        return;
-      }
-    }
-  }
-
   else if (cmd_args.get(0) == REBOOT_CMD) {
     Serial.println("Rebooting...");
     ESP.restart();
@@ -348,7 +314,7 @@ void CommandLine::runCommand(String input) {
     if (cmd_args.get(0) == SIGSTREN_CMD) {
       Serial.println("Starting Signal Strength Scan. Stop with " + (String)STOPSCAN_CMD);
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_SIG_STREN, TFT_MAGENTA);
+      wifi_scan_obj.StartScan(WIFI_SCAN_SIG_STREN, 0);
     }
     // Wardrive
     else if (cmd_args.get(0) == WARDRIVE_CMD) {
@@ -360,18 +326,18 @@ void CommandLine::runCommand(String input) {
 
       if (full_sw == -1) {
         Serial.println("Starting AP scan. Stop with " + (String)STOPSCAN_CMD);
-        wifi_scan_obj.StartScan(WIFI_SCAN_TARGET_AP, TFT_MAGENTA);
+        wifi_scan_obj.StartScan(WIFI_SCAN_TARGET_AP, 0);
       }
       else {
         Serial.println("Starting Full AP scan. Stop with " + (String)STOPSCAN_CMD);
-        wifi_scan_obj.StartScan(WIFI_SCAN_TARGET_AP_FULL, TFT_MAGENTA);
+        wifi_scan_obj.StartScan(WIFI_SCAN_TARGET_AP_FULL, 0);
       }
     }
     // Raw sniff
     else if (cmd_args.get(0) == SNIFF_RAW_CMD) {
       Serial.println("Starting Raw sniff. Stop with " + (String)STOPSCAN_CMD);
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_RAW_CAPTURE, TFT_WHITE);
+      wifi_scan_obj.StartScan(WIFI_SCAN_RAW_CAPTURE, 0);
     }
     // Scan stations
     else if (cmd_args.get(0) == SCANSTA_CMD) {    
@@ -380,37 +346,37 @@ void CommandLine::runCommand(String input) {
 
       Serial.println("Starting Station scan. Stop with " + (String)STOPSCAN_CMD);  
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_STATION, TFT_ORANGE);
+      wifi_scan_obj.StartScan(WIFI_SCAN_STATION, 0);
     }
     // Beacon sniff
     else if (cmd_args.get(0) == SNIFF_BEACON_CMD) {
       Serial.println("Starting Beacon sniff. Stop with " + (String)STOPSCAN_CMD);
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_AP, TFT_MAGENTA);
+      wifi_scan_obj.StartScan(WIFI_SCAN_AP, 0);
     }
     // Probe sniff
     else if (cmd_args.get(0) == SNIFF_PROBE_CMD) {
       Serial.println("Starting Probe sniff. Stop with " + (String)STOPSCAN_CMD);
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_PROBE, TFT_MAGENTA);
+      wifi_scan_obj.StartScan(WIFI_SCAN_PROBE, 0);
     }
     // Deauth sniff
     else if (cmd_args.get(0) == SNIFF_DEAUTH_CMD) {
       Serial.println("Starting Deauth sniff. Stop with " + (String)STOPSCAN_CMD);
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_DEAUTH, TFT_RED);
+      wifi_scan_obj.StartScan(WIFI_SCAN_DEAUTH, 0);
     }
     // Pwn sniff
     else if (cmd_args.get(0) == SNIFF_PWN_CMD) {
       Serial.println("Starting Pwnagotchi sniff. Stop with " + (String)STOPSCAN_CMD);
  
-      wifi_scan_obj.StartScan(WIFI_SCAN_PWN, TFT_MAGENTA);
+      wifi_scan_obj.StartScan(WIFI_SCAN_PWN, 0);
     }
     // Espressif sniff
     else if (cmd_args.get(0) == SNIFF_ESP_CMD) {
       Serial.println("Starting Espressif device sniff. Stop with " + (String)STOPSCAN_CMD);
 
-      wifi_scan_obj.StartScan(WIFI_SCAN_ESPRESSIF, TFT_MAGENTA);
+      wifi_scan_obj.StartScan(WIFI_SCAN_ESPRESSIF, 0);
     }
     // PMKID sniff
     else if (cmd_args.get(0) == SNIFF_PMKID_CMD) {
@@ -434,15 +400,15 @@ void CommandLine::runCommand(String input) {
 
       if (d_sw == -1) {
         Serial.println("Starting PMKID sniff on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
-        wifi_scan_obj.StartScan(WIFI_SCAN_EAPOL, TFT_VIOLET);
+        wifi_scan_obj.StartScan(WIFI_SCAN_EAPOL, 0);
       }
       else if ((d_sw != -1) && (l_sw != -1)) {
         Serial.println("Starting TARGETED PMKID sniff with deauthentication on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
-        wifi_scan_obj.StartScan(WIFI_SCAN_ACTIVE_LIST_EAPOL, TFT_VIOLET);
+        wifi_scan_obj.StartScan(WIFI_SCAN_ACTIVE_LIST_EAPOL, 0);
       }
       else {
         Serial.println("Starting PMKID sniff with deauthentication on channel " + (String)wifi_scan_obj.set_channel + ". Stop with " + (String)STOPSCAN_CMD);
-        wifi_scan_obj.StartScan(WIFI_SCAN_ACTIVE_EAPOL, TFT_VIOLET);
+        wifi_scan_obj.StartScan(WIFI_SCAN_ACTIVE_EAPOL, 0);
       }
     }    
 
@@ -491,10 +457,10 @@ void CommandLine::runCommand(String input) {
             Serial.println("Starting Deauthentication attack. Stop with " + (String)STOPSCAN_CMD);
             // Station list not specified
             if (targ_sw == -1)
-              wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH, TFT_RED);
+              wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH, 0);
             // Station list specified
             else
-              wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH_TARGETED, TFT_ORANGE);
+              wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH_TARGETED, 0);
           }
           // Source addr specified
           else {
@@ -503,7 +469,7 @@ void CommandLine::runCommand(String input) {
               &wifi_scan_obj.src_mac[0], &wifi_scan_obj.src_mac[1], &wifi_scan_obj.src_mac[2], &wifi_scan_obj.src_mac[3], &wifi_scan_obj.src_mac[4], &wifi_scan_obj.src_mac[5]);
 
             Serial.println("Starting Manual Deauthentication attack. Stop with " + (String)STOPSCAN_CMD);
-            wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH_MANUAL, TFT_RED);            
+            wifi_scan_obj.StartScan(WIFI_ATTACK_DEAUTH_MANUAL, 0);            
           }
         }
         // Beacon
@@ -516,13 +482,13 @@ void CommandLine::runCommand(String input) {
             }
 
             Serial.println("Starting Beacon list spam. Stop with " + (String)STOPSCAN_CMD);
-            wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_LIST, TFT_RED);
+            wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_LIST, 0);
           }
           // spam with random
           else if (rand_beacon_sw != -1) {
 
             Serial.println("Starting random Beacon spam. Stop with " + (String)STOPSCAN_CMD);
-            wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_SPAM, TFT_ORANGE);
+            wifi_scan_obj.StartScan(WIFI_ATTACK_BEACON_SPAM, 0);
           }
           // Spam from AP list
           else if (ap_beacon_sw != -1) {
@@ -532,7 +498,7 @@ void CommandLine::runCommand(String input) {
             }
 
             Serial.println("Starting Targeted AP Beacon spam. Stop with " + (String)STOPSCAN_CMD);
-            wifi_scan_obj.StartScan(WIFI_ATTACK_AP_SPAM, TFT_MAGENTA);
+            wifi_scan_obj.StartScan(WIFI_ATTACK_AP_SPAM, 0);
           }
           else {
             Serial.println("You did not specify a beacon attack type");
@@ -545,12 +511,12 @@ void CommandLine::runCommand(String input) {
           }
           Serial.println("Starting Probe spam. Stop with " + (String)STOPSCAN_CMD);
 
-          wifi_scan_obj.StartScan(WIFI_ATTACK_AUTH, TFT_RED);
+          wifi_scan_obj.StartScan(WIFI_ATTACK_AUTH, 0);
         }
         else if (attack_type == ATTACK_TYPE_RR) {
           Serial.println("Starting Rick Roll Beacon spam. Stop with " + (String)STOPSCAN_CMD);
 
-          wifi_scan_obj.StartScan(WIFI_ATTACK_RICK_ROLL, TFT_YELLOW);
+          wifi_scan_obj.StartScan(WIFI_ATTACK_RICK_ROLL, 0);
         }
         else {
           Serial.println("Attack type not properly defined");
@@ -809,41 +775,4 @@ void CommandLine::runCommand(String input) {
       return;
     }
   }
-  // Join WiFi
-  /*else if (cmd_args.get(0) == JOINWIFI_CMD) {
-    int n_sw = this->argSearch(&cmd_args, "-n"); // name
-    int a_sw = this->argSearch(&cmd_args, "-a"); // access point
-    int s_sw = this->argSearch(&cmd_args, "-s"); // ssid
-    int p_sw = this->argSearch(&cmd_args, "-p");   
-    
-    String essid = "";
-    String pwx = "";
-    
-    if (s_sw != -1) {
-      int index = cmd_args.get(s_sw + 1).toInt();
-      if (!this->inRange(ssids->size(), index)) {
-        Serial.println("Index not in range: " + (String)index);
-        return;
-      }
-      essid = ssids->get(index).essid;
-    } else if (a_sw != -1) {
-      int index = cmd_args.get(a_sw + 1).toInt();
-      if (!this->inRange(access_points->size(), index)) {
-        Serial.println("Index not in range: " + (String)index);
-        return;
-      }
-      essid = access_points->get(index).essid;
-    } else if (n_sw != -1) {
-      essid = cmd_args.get(n_sw + 1);
-    } else {
-      Serial.println("You must specify an access point or ssid");
-      return;
-    }
-    
-    if (p_sw != -1) {
-      pwx = cmd_args.get(p_sw + 1);
-    }
-    Serial.println("Attempting to join WiFi with ssid " + (String)essid);
-    wifi_scan_obj.joinWiFi(essid, pwx);
-  }*/
 }
