@@ -1977,14 +1977,12 @@ void WiFiScan::wifiSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
 void WiFiScan::eapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
 {
   extern WiFiScan wifi_scan_obj;
-  bool send_deauth = false; //settings_obj.loadSetting<bool>(text_table4[5]);
+  bool send_deauth = false;
   
   wifi_promiscuous_pkt_t *snifferPacket = (wifi_promiscuous_pkt_t*)buf;
   WifiMgmtHdr *frameControl = (WifiMgmtHdr*)snifferPacket->payload;
   wifi_pkt_rx_ctrl_t ctrl = (wifi_pkt_rx_ctrl_t)snifferPacket->rx_ctrl;
   int len = snifferPacket->rx_ctrl.sig_len;
-
-  String display_string = "";
 
   if (type == WIFI_PKT_MGMT)
   {
@@ -1994,9 +1992,7 @@ void WiFiScan::eapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
     const WifiMgmtHdr *hdr = &ipkt->hdr;
   }
 
-
   int buff = 0;
-
 
   // Found beacon frame. Decide whether to deauth
   if (send_deauth) {
@@ -2021,19 +2017,15 @@ void WiFiScan::eapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
       esp_wifi_80211_tx(WIFI_IF_AP, wifi_scan_obj.deauth_frame_default, sizeof(wifi_scan_obj.deauth_frame_default), false);
       delay(1);
     }
-
-
   }
 
-  if (( (snifferPacket->payload[30] == 0x88 && snifferPacket->payload[31] == 0x8e)|| ( snifferPacket->payload[32] == 0x88 && snifferPacket->payload[33] == 0x8e) )){
+  //if (( (snifferPacket->payload[30] == 0x88 && snifferPacket->payload[31] == 0x8e)|| ( snifferPacket->payload[32] == 0x88 && snifferPacket->payload[33] == 0x8e) )){
+  if ( ( snifferPacket->payload[32] == 0x88 && snifferPacket->payload[33] == 0x8e) && (snifferPacket->payload[40] == 0x0a || snifferPacket->payload[40] == 0x8a) ){
     num_eapol++;
     Serial.println("Received EAPOL:");
 
     char addr[] = "00:00:00:00:00:00";
     getMAC(addr, snifferPacket->payload, 10);
-    display_string.concat(addr);
-
-    int temp_len = display_string.length();
 
     Serial.println(addr);  
 
